@@ -1,0 +1,15 @@
+[project]
+name = "axoaxodend"
+version = "0.1.0"
+description = "Classify synapses between neuron sets as axo-dendritic or axo-axonic (male CNS, navis split) and build Clio-NG scenes"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "navis>=1.12",
+    "neuprint-python>=0.6",
+    "pandas>=2.0",
+    "scipy>=1.10",
+]
+
+[tool.uv]
+package = false
