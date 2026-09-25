@@ -3,7 +3,9 @@ name = "axoaxodend"
 version = "0.1.0"
 description = "Classify synapses between neuron sets as axo-dendritic or axo-axonic (male CNS, navis split) and build Clio-NG scenes"
 readme = "README.md"
-requires-python = ">=3.10"
+# navis caps pykdtree at 1.3.12 on macOS, which only ships wheels up to
+# Python 3.12; on 3.13 it compiles from source and fails without OpenMP
+requires-python = ">=3.10,<3.13"
 dependencies = [
     "navis>=1.12",
     "neuprint-python>=0.6",

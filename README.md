@@ -24,7 +24,7 @@ You need a neuprint token. Get it from https://neuprint.janelia.org → Account 
 ### Python (uv)
 
 ```sh
-uv sync                      # creates .venv from uv.lock
+uv sync                      # creates .venv from uv.lock, on Python 3.12 (.python-version)
 cp .env.example .env         # paste your token into .env
 uv run axoaxo_navis.py --pre MBON01 --post PAM01 --name mbon01_pam01
 ```
