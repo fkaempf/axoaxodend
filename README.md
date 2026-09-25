@@ -25,12 +25,13 @@ You need a neuprint token. Get it from https://neuprint.janelia.org → Account 
 
 ```sh
 uv sync                      # creates .venv from uv.lock, on Python 3.12 (.python-version)
-cp .env.example .env         # paste your token into .env
+uv run axoaxo_navis.py --set-token    # paste your token (hidden); saved to .env
 uv run axoaxo_navis.py --pre MBON01 --post PAM01 --name mbon01_pam01
 ```
 
-The script looks for the token in `NEUPRINT_APPLICATION_CREDENTIALS`, then in `.env`, then
-as `NEUPRINT_TOKEN` in `~/.Renviron`.
+Run `--set-token` again whenever the token expires (neuprint answers 401), or pass it
+directly: `uv run axoaxo_navis.py --set-token <TOKEN>`. The script looks for the token in
+`NEUPRINT_APPLICATION_CREDENTIALS`, then in `.env`, then as `NEUPRINT_TOKEN` in `~/.Renviron`.
 
 You can also call it from Python:
 

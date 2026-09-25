@@ -2,6 +2,7 @@
 implementation of synaptic flow centrality). Python twin of axoaxo.R.
 
     uv run axoaxo_navis.py --pre AVLP749m --post PAM02 PAM01 --name test
+    uv run axoaxo_navis.py --set-token          # new neuprint token -> .env
 
 or from Python:
 
@@ -18,6 +19,7 @@ Writes to scenes_navis/<name>/: synapses.csv, summary.csv, scene.json,
 scene_url.txt and <name>.webloc (double-click to open the scene).
 """
 import argparse
+import getpass
 import json
 import os
 import re
@@ -58,7 +60,22 @@ def token():
             m = re.search(rf'^{key}="?([^"\n]+)', f.read_text(), re.M)
             if m:
                 return m.group(1)
-    raise RuntimeError("no neuprint token: copy .env.example to .env and paste yours in")
+    raise RuntimeError("no neuprint token: run `uv run axoaxo_navis.py --set-token`")
+
+
+def set_token(new=None):
+    """Save a neuprint token to .env, replacing any old one; asks for it if not given."""
+    new = (new or getpass.getpass("neuprint token (input hidden): ")).strip()
+    if not new:
+        raise SystemExit("no token entered, .env unchanged")
+    env = AXO_DIR / ".env"
+    lines = env.read_text().splitlines() if env.exists() else []
+    lines = [l for l in lines if not l.startswith("NEUPRINT_APPLICATION_CREDENTIALS=")]
+    env.write_text("\n".join(lines + [f"NEUPRINT_APPLICATION_CREDENTIALS={new}"]) + "\n")
+    print(f"saved to {env}")
+    if os.environ.get("NEUPRINT_APPLICATION_CREDENTIALS"):
+        print("note: NEUPRINT_APPLICATION_CREDENTIALS is also set in your shell and takes "
+              "precedence; unset it to use the new token")
 
 
 def client():
@@ -247,10 +264,17 @@ def axoaxo(pre, post, name, min_sites=20, open_scene=True):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--pre", nargs="+", required=True)
-    ap.add_argument("--post", nargs="+", required=True)
-    ap.add_argument("--name", required=True)
+    ap.add_argument("--pre", nargs="+")
+    ap.add_argument("--post", nargs="+")
+    ap.add_argument("--name")
     ap.add_argument("--min-sites", type=int, default=20)
     ap.add_argument("--no-open", action="store_true")
+    ap.add_argument("--set-token", nargs="?", const="", metavar="TOKEN",
+                    help="save a new neuprint token to .env (prompts if TOKEN is omitted)")
     a = ap.parse_args()
-    axoaxo(a.pre, a.post, a.name, a.min_sites, not a.no_open)
+    if a.set_token is not None:
+        set_token(a.set_token)
+    elif not (a.pre and a.post and a.name):
+        ap.error("--pre, --post and --name are required (or use --set-token)")
+    else:
+        axoaxo(a.pre, a.post, a.name, a.min_sites, not a.no_open)
