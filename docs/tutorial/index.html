@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1280px; height: 720px; overflow: hidden;
+        background: #0d1117; color: #e6edf3;
+        font-family: Inter, -apple-system, "Helvetica Neue", sans-serif;
+      }
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; inset: 0; }
+
+      /* step header, top left of every terminal scene */
+      .step { position: absolute; left: 80px; top: 64px; font-size: 22px; color: #7d8590;
+              letter-spacing: .08em; text-transform: uppercase; }
+      .step b { color: #40c4ff; font-weight: 600; margin-right: 12px; }
+      .headline { position: absolute; left: 80px; top: 100px; font-size: 44px; font-weight: 650;
+                  letter-spacing: -.02em; }
+
+      .term { position: absolute; left: 80px; right: 80px; top: 190px;
+              background: #161b22; border: 1px solid #30363d; border-radius: 14px;
+              min-height: 300px; padding: 58px 36px 34px; font: 25px/1.65 Menlo, "SF Mono", monospace; }
+      .term::before { content: ""; position: absolute; left: 22px; top: 20px; width: 13px; height: 13px;
+                      border-radius: 50%; background: #ff5f57;
+                      box-shadow: 22px 0 #febc2e, 44px 0 #28c840; }
+      .line { white-space: pre; overflow: hidden; }
+      /* typed lines grow from width 0 in ch steps */
+      .typed { display: inline-block; vertical-align: bottom; width: 0; white-space: pre; overflow: hidden; }
+      .p { color: #3fb950; }          /* prompt */
+      .dim { color: #7d8590; }
+      .ok { color: #3fb950; }
+      .blue { color: #40c4ff; }
+      .red { color: #ff5252; }
+
+      /* title + end cards */
+      .center { display: flex; flex-direction: column; align-items: center; justify-content: center;
+                text-align: center; }
+      .big { font-size: 84px; font-weight: 700; letter-spacing: -.03em; }
+      .sub { margin-top: 22px; font-size: 32px; color: #9aa4af; max-width: 1000px; line-height: 1.35; }
+      .sub .blue, .sub .red { font-weight: 600; }
+      .url { margin-top: 40px; font: 30px Menlo, monospace; color: #40c4ff; }
+
+      /* results */
+      .bars { position: absolute; left: 80px; right: 80px; top: 210px; }
+      .row { display: flex; align-items: center; margin-bottom: 30px; font-size: 28px; }
+      .row .lab { width: 250px; color: #c9d1d9; }
+      .row .bar { height: 54px; border-radius: 8px; width: 0; }
+      .row .n { margin-left: 18px; font: 600 30px Menlo, monospace; }
+      .files { position: absolute; left: 80px; right: 80px; top: 420px;
+               font: 24px/1.8 Menlo, monospace; color: #c9d1d9; }
+      .files .dim { font-family: Inter, -apple-system, sans-serif; font-size: 23px; }
+      .note { position: absolute; left: 80px; bottom: 52px; font-size: 22px; color: #7d8590; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="34"
+         data-width="1280" data-height="720">
+
+      <!-- 0: title -->
+      <section id="s-title" class="clip center" data-start="0" data-duration="4.5" data-track-index="0">
+        <div class="big" id="t-big">axoaxodend</div>
+        <div class="sub" id="t-sub">Does input land on the neuron's
+          <span class="blue">dendrite</span> or its <span class="red">axon</span>?<br>
+          Male CNS · neuprint · navis</div>
+      </section>
+
+      <!-- 1: install -->
+      <section id="s-install" class="clip" data-start="4.5" data-duration="7" data-track-index="0">
+        <div class="step"><b>1</b>install</div>
+        <div class="headline">One command sets up Python</div>
+        <div class="term">
+          <div class="line"><span class="p">$ </span><span class="typed" id="i1">git clone https://github.com/fkaempf/axoaxodend</span></div>
+          <div class="line"><span class="p">$ </span><span class="typed" id="i2">cd axoaxodend && uv sync</span></div>
+          <div class="line dim" id="i3">Using CPython 3.12 · Installed 46 packages</div>
+        </div>
+      </section>
+
+      <!-- 2: token -->
+      <section id="s-token" class="clip" data-start="11.5" data-duration="5.5" data-track-index="0">
+        <div class="step"><b>2</b>token</div>
+        <div class="headline">Paste your neuprint token once</div>
+        <div class="term">
+          <div class="line"><span class="p">$ </span><span class="typed" id="k1">uv run axoaxo_navis.py --set-token</span></div>
+          <div class="line"><span class="dim">neuprint token (input hidden): </span><span class="typed" id="k2">••••••••••••</span></div>
+          <div class="line ok" id="k3">saved to .env</div>
+        </div>
+      </section>
+
+      <!-- 3: query -->
+      <section id="s-query" class="clip" data-start="17" data-duration="7.5" data-track-index="0">
+        <div class="step"><b>3</b>query</div>
+        <div class="headline">Presynaptic types → postsynaptic types</div>
+        <div class="term">
+          <div class="line"><span class="p">$ </span><span class="typed" id="q1">uv run axoaxo_navis.py --pre MBON01 --post PAM01 \</span></div>
+          <div class="line">    <span class="typed" id="q2">--name mbon01_pam01</span></div>
+          <div class="line" id="q3"><span class="blue">mbon01_pam01</span>: 128 synapses, 44 post bodies</div>
+          <div class="line" id="q4">  <span class="red">35.2% axo-axonic</span> <span class="dim">(0.0% on linker)</span></div>
+          <div class="line dim" id="q5">scene link: scenes_navis/mbon01_pam01/mbon01_pam01.webloc</div>
+        </div>
+      </section>
+
+      <!-- 4: results -->
+      <section id="s-results" class="clip" data-start="24.5" data-duration="6" data-track-index="0">
+        <div class="step"><b>4</b>results</div>
+        <div class="headline">Every MBON01 → PAM01 synapse, labelled</div>
+        <div class="bars">
+          <div class="row"><span class="lab">axo-dendritic</span>
+            <span class="bar" id="b1" style="background:#40c4ff"></span><span class="n blue" id="n1">83</span></div>
+          <div class="row"><span class="lab">axo-axonic</span>
+            <span class="bar" id="b2" style="background:#ff5252"></span><span class="n red" id="n2">45</span></div>
+        </div>
+        <div class="files" id="files">
+          <div>summary.csv   <span class="dim">counts, % axo-axonic, segregation index per body</span></div>
+          <div>synapses.csv  <span class="dim">one row per synapse, with xyz</span></div>
+          <div>*.webloc      <span class="dim">double-click → Clio-NG scene, one layer per type</span></div>
+        </div>
+        <div class="note" id="note">Split: navis.split_axon_dendrite (synapse flow centrality). Check the segregation index before trusting a split.</div>
+      </section>
+
+      <!-- 5: end -->
+      <section id="s-end" class="clip center" data-start="30.5" data-duration="3.5" data-track-index="0">
+        <div class="big" id="e-big">axoaxodend</div>
+        <div class="url" id="e-url">github.com/fkaempf/axoaxodend</div>
+      </section>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // type a line: width grows one character per step
+      const type = (sel, at, cps = 34) => {
+        const el = document.querySelector(sel);
+        const n = el.textContent.length;
+        tl.fromTo(el, { width: 0 }, { width: n + "ch", duration: n / cps, ease: `steps(${n})` }, at);
+        return at + n / cps;
+      };
+      const show = (sel, at) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.25 }, at);
+      const enter = (scene, at) => {
+        tl.fromTo(`${scene} .step, ${scene} .headline`, { opacity: 0, y: 14 },
+                  { opacity: 1, y: 0, duration: 0.4, stagger: 0.08 }, at);
+        tl.fromTo(`${scene} .term`, { opacity: 0 }, { opacity: 1, duration: 0.35 }, at + 0.15);
+      };
+
+      // title
+      tl.fromTo("#t-big", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 0.2);
+      tl.fromTo("#t-sub", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.9);
+
+      // install
+      enter("#s-install", 4.5);
+      let t = type("#i1", 5.2);
+      t = type("#i2", t + 0.35);
+      show("#i3", t + 0.6);
+
+      // token
+      enter("#s-token", 11.5);
+      t = type("#k1", 12.1);
+      t = type("#k2", t + 0.5, 20);
+      show("#k3", t + 0.4);
+
+      // query
+      enter("#s-query", 17);
+      t = type("#q1", 17.6);
+      t = type("#q2", t + 0.1);
+      show("#q3", t + 1.0);
+      show("#q4", t + 1.3);
+      show("#q5", t + 1.7);
+
+      // results: bar widths proportional to counts (83 of 128 -> 700 px)
+      tl.fromTo("#s-results .step, #s-results .headline", { opacity: 0, y: 14 },
+                { opacity: 1, y: 0, duration: 0.4, stagger: 0.08 }, 24.5);
+      tl.fromTo("#b1", { width: 0 }, { width: 700, duration: 0.9, ease: "power2.out" }, 25.0);
+      tl.fromTo("#b2", { width: 0 }, { width: 700 * 45 / 83, duration: 0.9, ease: "power2.out" }, 25.2);
+      tl.fromTo("#n1, #n2", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 25.9);
+      tl.fromTo("#files > div", { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.35, stagger: 0.25 }, 26.4);
+      show("#note", 27.6);
+
+      // end
+      tl.fromTo("#e-big", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 30.7);
+      tl.fromTo("#e-url", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 31.1);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

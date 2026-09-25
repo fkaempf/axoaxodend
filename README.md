@@ -5,6 +5,12 @@ Take a set of presynaptic neurons and a set of postsynaptic neurons in the male 
 postsynaptic neuron's **dendrite** (axo-dendritic) or its **axon** (axo-axonic). Output is a
 table plus a Clio-NG (neuroglancer) scene.
 
+![Install, set the token, run a query, read the result](docs/tutorial.gif)
+
+34-second walkthrough ([MP4](docs/tutorial.mp4)). It was made with
+[HyperFrames](https://github.com/heygen-com/hyperframes) from `docs/tutorial/index.html`;
+re-render with `cd docs/tutorial && npm run render`.
+
 Two versions:
 
 | file | axon/dendrite split | use for |
